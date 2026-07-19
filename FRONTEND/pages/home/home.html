@@ -1,1 +1,71 @@
+<!-- ============================================================
+  pages/Home/Home.html — Panel principal del usuario
+============================================================= -->
 
+<template id="tpl-home">
+  <div class="home">
+    <div class="home__head">
+      <h1 class="h1">Hola de nuevo</h1>
+      <span class="badge badge--gold">Ciclo {{cycle}} · sorteo el viernes</span>
+    </div>
+
+    <div data-slot="prize"></div>
+    <div data-slot="suspended"></div>
+
+    <div class="grid grid--cards home__grid">
+      <div data-slot="vaultcard"></div>
+      <div class="card home__countdown">
+        <div class="label">Próximo sorteo — viernes 18:00</div>
+        <div class="home__boxes" data-slot="countdown"></div>
+        <div class="mono text-gold home__pot">Bote estimado: {{pot}} USDC</div>
+        <a href="#/lottery" class="btn btn--ghost btn--block home__golottery">Ver simulación del sorteo →</a>
+      </div>
+    </div>
+
+    <div class="card home__score">
+      <div class="home__scorehead">
+        <div class="label">Reputation Score — tu peso en el sorteo</div>
+        <span class="num text-green home__scoretotal" data-slot="score-total"></span>
+      </div>
+      <div class="home__scoregrid" data-slot="score-bars"></div>
+      <p class="home__scorenote text-muted-2">
+        Si retiras capital, tu racha de constancia se reinicia a cero y quedas fuera del sorteo
+        hasta el siguiente ciclo. Tu histórico nunca retrocede.
+      </p>
+    </div>
+  </div>
+</template>
+
+<!-- Banner de premio pendiente (pull-payment) -->
+<template id="tpl-home-prize">
+  <div class="card home__prize">
+    <div class="home__prizeinfo">
+      <div class="home__prizetitle">🏆 PREMIO PENDIENTE DE RECLAMAR</div>
+      <div class="num home__prizeamount">{{amount}} USDC</div>
+      <div class="home__prizesub text-muted">
+        Pago por reclamo (pull-payment): el premio se acredita y lo retiras tú firmando.
+      </div>
+    </div>
+    <button class="btn btn--gold" data-action="claim">Reclamar premio</button>
+  </div>
+</template>
+
+<!-- Caja de la cuenta atrás -->
+<template id="tpl-home-timebox">
+  <div class="home__box">
+    <div class="num home__boxval">{{value}}</div>
+    <div class="mono home__boxlabel">{{unit}}</div>
+  </div>
+</template>
+
+<!-- Barra del score -->
+<template id="tpl-home-scorebar">
+  <div class="home__bar">
+    <div class="home__barhead">
+      <span>{{name}} <span class="mono home__barweight">{{weight}}</span></span>
+      <span class="mono text-muted">{{value}}</span>
+    </div>
+    <div class="home__bartrack"><div class="home__barfill" style="width: {{pct}}%"></div></div>
+    <div class="home__barsub text-muted-2">{{sub}}</div>
+  </div>
+</template>
