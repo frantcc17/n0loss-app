@@ -1,1 +1,56 @@
+<!-- ============================================================
+  pages/Lottery/Lottery.html — Página de sorteos
+============================================================= -->
 
+<template id="tpl-lottery">
+  <div class="lottery">
+    <h1 class="h1">Sorteo semanal</h1>
+    <p class="sub">Lotería ponderada por Reputation Score, con aleatoriedad verificable de Chainlink VRF v2.5. Simulación de la beta.</p>
+
+    <div class="grid grid--panels lottery__grid">
+      <div data-slot="wheel"></div>
+
+      <div class="card">
+        <div class="card-panel__title">Participantes de la ronda (muestra)</div>
+        <p class="lottery__formula text-muted-2">
+          P(ganar) = Score / Σ Scores. TVL &lt; 100M USDC → un único ganador se lleva el 100% del bote.
+        </p>
+        <div data-slot="participants"></div>
+        <p class="lottery__cta text-gold" data-slot="cta"></p>
+      </div>
+    </div>
+
+    <div class="card lottery__history">
+      <div class="card-panel__title">Últimos sorteos · Chainlink VRF v2.5</div>
+      <div class="lottery__tablewrap">
+        <table class="lottery__table">
+          <thead>
+            <tr><th>CICLO</th><th>FECHA</th><th>GANADOR</th><th>PREMIO</th><th>PRUEBA VRF</th></tr>
+          </thead>
+          <tbody data-slot="draws"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Fila de participante -->
+<template id="tpl-lottery-participant">
+  <div class="lottery__row">
+    <span class="lottery__dot" style="background: {{color}}"></span>
+    <span class="mono lottery__name {{nameClass}}">{{name}}</span>
+    <span class="mono text-muted lottery__score">score {{score}}</span>
+    <span class="mono text-gold lottery__pct">{{pct}}%</span>
+  </div>
+</template>
+
+<!-- Fila de sorteo pasado -->
+<template id="tpl-lottery-draw">
+  <tr>
+    <td class="mono text-muted">#{{cycle}}</td>
+    <td class="text-muted">{{date}}</td>
+    <td class="mono">{{winner}}</td>
+    <td class="mono text-gold">{{prize}}</td>
+    <td class="mono text-green">{{vrf}}… ↗</td>
+  </tr>
+</template>
