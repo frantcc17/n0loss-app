@@ -1,0 +1,33 @@
+<!-- ============================================================
+  components/VaultCard/VaultCard.html — Tarjeta del Vault
+  Placeholders: {{balance}}, {{tickets}}, {{prob}}
+============================================================= -->
+<template id="tpl-vaultcard">
+  <div class="card vaultcard">
+    <div class="label">Tu capital en el Vault</div>
+    <div class="num vaultcard__balance">{{balance}} <span class="vaultcard__unit">USDC</span></div>
+    <div class="vaultcard__safe text-green">Intacto — el rendimiento financia los premios, nunca tu capital.</div>
+
+    <div class="vaultcard__tickets">
+      <svg class="vaultcard__ring" width="34" height="34" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3"></circle>
+        <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="3" stroke-linecap="round"></line>
+      </svg>
+      <div>
+        <span class="num vaultcard__ticketnum">{{tickets}}</span>
+        <span class="vaultcard__ticketlabel">tickets este ciclo</span>
+      </div>
+    </div>
+    <div class="vaultcard__prob text-muted">
+      Probabilidad estimada esta semana:
+      <span class="num text-green">{{prob}}</span>
+    </div>
+
+    <div class="vaultcard__notice" data-slot="notice"></div>
+
+    <div class="vaultcard__actions">
+      <button class="btn btn--primary" data-action="deposit">Depositar</button>
+      <button class="btn btn--ghost" data-action="withdraw">Retirar</button>
+    </div>
+  </div>
+</template>
