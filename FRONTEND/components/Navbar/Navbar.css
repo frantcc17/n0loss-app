@@ -1,1 +1,63 @@
+/* ============================================================
+   components/Navbar/Navbar.css — Barra superior
+   ============================================================ */
 
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(242, 247, 241, 0.9); /* --bg con transparencia */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.navbar__inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.navbar__logo {
+  font-size: 20px;
+  color: var(--text);
+}
+.navbar__logo .logo__ring { color: var(--green); }
+
+.navbar__cycle { white-space: nowrap; }
+
+.navbar__spacer { flex: 1; }
+
+.navbar__wallet {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.navbar__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+
+.navbar__logout {
+  padding: 8px 14px;
+  font-size: 13px;
+  flex: none;
+}
+
+/* Móvil: ocultar el badge del ciclo para no saturar */
+@media (max-width: 640px) {
+  .navbar__cycle { display: none; }
+}
