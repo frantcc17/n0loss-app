@@ -1,1 +1,91 @@
+/* ============================================================
+   pages/Home/Home.css — Panel principal
+   ============================================================ */
 
+.home__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home__grid { margin-top: 18px; }
+
+/* ---------- Premio pendiente ---------- */
+.home__prize {
+  margin-top: 18px;
+  border-color: rgba(185, 138, 31, .40);
+  background: linear-gradient(135deg, var(--gold-tint), var(--panel));
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.home__prize:empty { display: none; }
+.home__prizeinfo { flex: 1; min-width: 220px; }
+.home__prizetitle {
+  font-size: 13px; color: var(--gold); font-weight: 700; letter-spacing: .04em;
+}
+.home__prizeamount { font-size: 26px; margin-top: 4px; }
+.home__prizesub { font-size: 12px; margin-top: 2px; }
+.home__prize .btn { flex: none; padding: 12px 22px; }
+
+/* ---------- Cuenta atrás ---------- */
+.home__countdown { text-align: center; }
+.home__boxes {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px 0 10px;
+}
+.home__box {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 0;
+  width: 58px;
+}
+.home__boxval { font-size: 22px; }
+.home__boxlabel { font-size: 10px; color: var(--muted-2); }
+.home__pot { font-size: 13px; }
+.home__golottery { margin-top: 12px; font-size: 13px; }
+
+/* ---------- Reputation Score ---------- */
+.home__score { margin-top: 16px; }
+.home__scorehead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.home__scoretotal { font-size: 20px; }
+.home__scoregrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+.home__barhead {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+}
+.home__barweight { color: var(--muted-2); font-size: 11px; }
+.home__bartrack {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--line-soft);
+  margin-top: 6px;
+  overflow: hidden;
+}
+.home__barfill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--green-dim), var(--green));
+  transition: width .6s ease;
+}
+.home__barsub { font-size: 11.5px; margin-top: 5px; }
+.home__scorenote { font-size: 12px; margin: 14px 0 0; line-height: 1.5; }
