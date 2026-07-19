@@ -1,1 +1,88 @@
+<!-- ============================================================
+  components/Modal/Modal.html — Plantillas de ventanas modales
+  Incluye: modal de firma estilo wallet (revisar → firmar →
+  pendiente → confirmada) y modal de importe (depósito/retiro)
+============================================================= -->
 
+<!-- Cabecera estilo wallet: cuenta + red -->
+<template id="tpl-wallet-header">
+  <div class="wallet__header">
+    <div class="wallet__account">
+      <span class="wallet__avatar" aria-hidden="true"></span>
+      <span>
+        <span class="mono wallet__addr">{{wallet}}</span>
+        <span class="mono wallet__acclabel">Cuenta 1</span>
+      </span>
+    </div>
+    <span class="wallet__network">
+      <span class="wallet__netdot" aria-hidden="true"></span>
+      Polygon
+    </span>
+  </div>
+</template>
+
+<!-- Fase 1: revisar y firmar -->
+<template id="tpl-wallet-review">
+  <div class="wallet__body">
+    <div class="mono wallet__origin">app.n0loss.com solicita tu firma</div>
+    <h3 class="wallet__title">{{label}}</h3>
+    <div class="mono wallet__stepcount">{{stepCount}}</div>
+    <div class="num wallet__amount">{{amount}}</div>
+
+    <div class="wallet__rows">
+      <div class="wallet__row"><span>Contrato</span><span class="mono">{{contractName}}</span></div>
+      <div class="wallet__row"><span>Dirección</span><span class="mono">{{contractAddr}}</span></div>
+      <div class="wallet__row"><span>Función</span><span class="mono">{{fn}}</span></div>
+      <div class="wallet__row"><span>Red</span><span class="mono">Polygon PoS</span></div>
+      <div class="wallet__row"><span>Comisión de gas</span><span class="mono text-green">0 POL — patrocinada (ERC-2771)</span></div>
+    </div>
+
+    <p class="wallet__detail">{{detail}}</p>
+    <div class="wallet__warning" data-slot="warning">{{warning}}</div>
+
+    <div class="wallet__actions">
+      <button class="btn btn--ghost" data-action="reject">Rechazar</button>
+      <button class="btn btn--primary" data-action="sign">Firmar</button>
+    </div>
+  </div>
+</template>
+
+<!-- Fases intermedias: firmando / pendiente -->
+<template id="tpl-wallet-state">
+  <div class="wallet__body wallet__body--center">
+    <div class="spinner wallet__spinner"></div>
+    <div class="wallet__statelabel">{{label}}</div>
+    <div class="wallet__statesub">{{sub}}</div>
+  </div>
+</template>
+
+<!-- Fase final: confirmada -->
+<template id="tpl-wallet-confirmed">
+  <div class="wallet__body wallet__body--center">
+    <div class="wallet__check" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <div class="wallet__confirmedlabel">{{label}}: confirmada</div>
+    <a class="mono wallet__scan">Ver en Polygonscan ↗</a>
+    <button class="btn btn--primary btn--block wallet__next" data-action="next">{{nextLabel}}</button>
+  </div>
+</template>
+
+<!-- Modal de importe (previo a la firma) -->
+<template id="tpl-amount">
+  <div class="amount__body">
+    <h3 class="h2">{{title}}</h3>
+    <p class="amount__desc">{{desc}}</p>
+    <label class="field">
+      <span class="field__label">Importe (USDC)</span>
+      <input class="input mono amount__input" type="number" min="0" inputmode="decimal" value="{{initial}}" />
+    </label>
+    <div class="mono text-green amount__tickets" data-slot="tickets"></div>
+    <div class="wallet__actions">
+      <button class="btn btn--ghost" data-action="cancel">Cancelar</button>
+      <button class="btn btn--primary" data-action="confirm">Continuar</button>
+    </div>
+  </div>
+</template>
