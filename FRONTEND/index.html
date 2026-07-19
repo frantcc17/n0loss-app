@@ -15,7 +15,19 @@
   <link rel="stylesheet" href="./styles/global.css" />
 </head>
 <body>
-  <!-- Raíz de la aplicación: App.js monta aquí navbar, sidebar y la página activa -->
+  <!-- Pantalla de carga: visible desde el primer instante, App.js la retira -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <div class="splash__logo">
+      N<svg class="splash__ring" width="52" height="52" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"></circle>
+        <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></line>
+      </svg>LOSS
+    </div>
+    <p class="splash__slogan">Protege lo que construyes</p>
+    <div class="splash__bar"><span></span></div>
+  </div>
+
+  <!-- Raíz de la aplicación: App.js monta aquí navbar y la página activa -->
   <div id="app" class="app"></div>
 
   <!-- Capa para modales y toasts -->
