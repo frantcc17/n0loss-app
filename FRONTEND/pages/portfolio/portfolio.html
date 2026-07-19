@@ -1,1 +1,43 @@
+<!-- ============================================================
+  pages/Portfolio/Portfolio.html — Portafolio e inversiones
+============================================================= -->
 
+<template id="tpl-portfolio">
+  <div class="portfolio">
+    <h1 class="h1">Portafolio</h1>
+    <p class="sub">Tu posición, la evolución del protocolo y tus movimientos.</p>
+
+    <div class="grid grid--stats portfolio__stats" data-slot="stats"></div>
+
+    <div class="grid grid--panels portfolio__panels">
+      <div class="card">
+        <div class="card-panel__title">TVL del protocolo por ciclo (USDC)</div>
+        <div data-slot="tvl"></div>
+      </div>
+      <div class="card">
+        <div class="card-panel__title">Premio semanal repartido (USDC)</div>
+        <div data-slot="prizes"></div>
+      </div>
+      <div class="card">
+        <div class="card-panel__title">APR del subyacente · Ondo OUSG (%)</div>
+        <div data-slot="apr"></div>
+      </div>
+      <div class="card">
+        <div class="card-panel__title">Tus movimientos</div>
+        <div data-slot="activity"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Fila de movimiento -->
+<template id="tpl-portfolio-activity">
+  <div class="portfolio__mov">
+    <span class="portfolio__movicon portfolio__movicon--{{type}}" aria-hidden="true"></span>
+    <span class="portfolio__movinfo">
+      <span class="portfolio__movlabel">{{label}}</span>
+      <span class="portfolio__movdate text-muted-2">{{date}}</span>
+    </span>
+    <span class="num {{amountClass}}">{{amount}}</span>
+  </div>
+</template>
