@@ -1,1 +1,48 @@
-
+<!-- ============================================================
+  components/Sidebar/Sidebar.html — Menú lateral
+  El estado activo lo marca Sidebar.js con la clase .is-active
+============================================================= -->
+<nav class="sidebar" aria-label="Navegación principal">
+  <ul class="sidebar__list">
+    <li>
+      <a href="#/home" class="sidebar__link" data-route="home">
+        <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path>
+        </svg>
+        <span>Mi panel</span>
+      </a>
+    </li>
+    <li>
+      <a href="#/vault" class="sidebar__link" data-route="vault">
+        <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="12" cy="12" r="3.5"></circle><path d="M12 8.5v-2M12 17.5v-2M15.5 12h2M6.5 12h2"></path>
+        </svg>
+        <span>Vault</span>
+      </a>
+    </li>
+    <li>
+      <a href="#/lottery" class="sidebar__link" data-route="lottery">
+        <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle><path d="M12 3v9l6.3 4.2"></path>
+        </svg>
+        <span>Sorteo</span>
+      </a>
+    </li>
+    <li>
+      <a href="#/portfolio" class="sidebar__link" data-route="portfolio">
+        <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 19V10M10 19V5M16 19v-8M21 19H3"></path>
+        </svg>
+        <span>Portafolio</span>
+      </a>
+    </li>
+    <li>
+      <a href="#/settings" class="sidebar__link" data-route="settings">
+        <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"></path>
+        </svg>
+        <span>Ajustes</span>
+      </a>
+    </li>
+  </ul>
+</nav>
