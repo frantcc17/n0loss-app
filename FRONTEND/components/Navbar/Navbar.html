@@ -1,6 +1,7 @@
 <!-- ============================================================
-  components/Navbar/Navbar.html — Barra superior
+  components/Navbar/Navbar.html — Barra superior con navegación
   Placeholders: {{wallet}} (dirección abreviada), {{cycle}} (ciclo)
+  El estado activo de las pestañas lo marca Navbar.js (.is-active)
 ============================================================= -->
 <div class="navbar">
   <div class="navbar__inner">
@@ -11,9 +12,17 @@
       </svg>LOSS
     </a>
 
-    <span class="badge badge--gold navbar__cycle">Ciclo {{cycle}} · sorteo el viernes</span>
+    <nav class="navbar__nav" aria-label="Navegación principal">
+      <a href="#/home" class="navbar__tab" data-route="home">Mi panel</a>
+      <a href="#/vault" class="navbar__tab" data-route="vault">Vault</a>
+      <a href="#/lottery" class="navbar__tab" data-route="lottery">Sorteo</a>
+      <a href="#/portfolio" class="navbar__tab" data-route="portfolio">Portafolio</a>
+      <a href="#/settings" class="navbar__tab" data-route="settings">Ajustes</a>
+    </nav>
 
     <div class="navbar__spacer"></div>
+
+    <span class="badge badge--gold navbar__cycle">Ciclo {{cycle}}</span>
 
     <span class="navbar__wallet" title="Wallet conectada">
       <span class="navbar__dot" aria-hidden="true"></span>
