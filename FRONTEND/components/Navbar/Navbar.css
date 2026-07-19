@@ -1,5 +1,5 @@
 /* ============================================================
-   components/Navbar/Navbar.css — Barra superior
+   components/Navbar/Navbar.css — Barra superior con navegación
    ============================================================ */
 
 .navbar {
@@ -14,11 +14,11 @@
 .navbar__inner {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 20px;
-  height: var(--nav-h);
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: wrap;
 }
 
 .navbar__logo {
@@ -27,9 +27,30 @@
 }
 .navbar__logo .logo__ring { color: var(--green); }
 
-.navbar__cycle { white-space: nowrap; }
+/* ---------- Pestañas de navegación ---------- */
+.navbar__nav {
+  display: flex;
+  gap: 4px;
+}
+.navbar__tab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s ease, color .15s ease;
+}
+.navbar__tab:hover { background: var(--panel-2); color: var(--text); }
+.navbar__tab.is-active {
+  background: var(--green-tint);
+  color: var(--green);
+}
 
 .navbar__spacer { flex: 1; }
+
+.navbar__cycle { white-space: nowrap; }
 
 .navbar__wallet {
   display: inline-flex;
@@ -42,7 +63,6 @@
   padding: 6px 12px;
   white-space: nowrap;
 }
-
 .navbar__dot {
   width: 7px;
   height: 7px;
@@ -57,7 +77,21 @@
   flex: none;
 }
 
-/* Móvil: ocultar el badge del ciclo para no saturar */
-@media (max-width: 640px) {
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
   .navbar__cycle { display: none; }
+}
+@media (max-width: 820px) {
+  /* Las pestañas pasan a una segunda fila deslizable */
+  .navbar__nav {
+    order: 10;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .navbar__nav::-webkit-scrollbar { display: none; }
+}
+@media (max-width: 480px) {
+  .navbar__wallet { display: none; }
 }
