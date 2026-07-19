@@ -1,1 +1,31 @@
+/* ============================================================
+   pages/Portfolio/Portfolio.css — Portafolio e inversiones
+   ============================================================ */
 
+.portfolio__stats { margin-top: 14px; }
+.portfolio__panels { margin-top: 16px; align-items: start; }
+
+.portfolio__mov {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.portfolio__movicon {
+  width: 30px; height: 30px; border-radius: 9px; flex: none;
+  background: var(--green-tint);
+  position: relative;
+}
+.portfolio__movicon::after {
+  content: "↓";
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--green); font-weight: 700; font-size: 14px;
+}
+.portfolio__movicon--ticket { background: var(--gold-tint); }
+.portfolio__movicon--ticket::after { content: "◎"; color: var(--gold); }
+
+.portfolio__movinfo { flex: 1; display: flex; flex-direction: column; }
+.portfolio__movlabel { font-size: 13px; font-weight: 600; }
+.portfolio__movdate { font-size: 11.5px; }
