@@ -1,0 +1,43 @@
+/* ============================================================
+   components/VaultCard/VaultCard.css — Tarjeta del Vault
+   ============================================================ */
+
+.vaultcard__balance {
+  font-size: 34px;
+  margin: 8px 0 2px;
+}
+.vaultcard__unit {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.vaultcard__safe { font-size: 12.5px; }
+
+.vaultcard__tickets {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+}
+.vaultcard__ring { color: var(--gold); flex: none; }
+.vaultcard__ticketnum { font-size: 26px; }
+.vaultcard__ticketlabel {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.vaultcard__prob { font-size: 12.5px; }
+
+.vaultcard__notice { margin-top: 12px; }
+.vaultcard__notice:empty { display: none; }
+.vaultcard__notice .card--notice { padding: 10px 12px; border-radius: 10px; font-size: 12px; }
+
+.vaultcard__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.vaultcard__actions .btn { flex: 1; }
