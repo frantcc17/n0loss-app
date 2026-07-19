@@ -1,1 +1,29 @@
+/* ============================================================
+   components/Card/Card.css — Tarjetas de información
+   Extiende la clase .card de global.css
+   ============================================================ */
 
+.card--stat .card-stat__value {
+  font-size: 20px;
+  margin-top: 8px;
+}
+.card--stat .card-stat__sub {
+  font-size: 11.5px;
+  margin-top: 4px;
+}
+
+.card--panel .card-panel__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+/* Avisos */
+.card--notice {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.card--notice-info   { border-color: rgba(15, 74, 52, .35);  color: var(--green); background: var(--green-tint); }
+.card--notice-warn   { border-color: rgba(185, 138, 31, .40); color: var(--gold);  background: var(--gold-tint); }
+.card--notice-danger { border-color: rgba(185, 74, 68, .40);  color: var(--red); }
