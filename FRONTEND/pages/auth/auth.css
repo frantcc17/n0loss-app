@@ -1,1 +1,100 @@
+/* ============================================================
+   pages/Auth/Auth.css — Inicio de sesión y registro
+   ============================================================ */
 
+.auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(205, 232, 214, .67), transparent),
+    var(--bg);
+}
+
+.auth__box {
+  width: 420px;
+  max-width: 100%;
+  animation: rise .4s ease;
+}
+
+.auth__head { text-align: center; margin-bottom: 22px; }
+.auth__logo { font-size: 30px; justify-content: center; display: inline-flex; }
+.auth__logo .logo__ring { color: var(--green); }
+.auth__badge { margin-top: 10px; }
+.auth__tagline {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+  margin-top: 14px;
+}
+.auth__tagline:empty { display: none; }
+
+/* Indicador de pasos del registro */
+.auth__steps { display: flex; gap: 6px; margin-bottom: 18px; }
+.auth__steps:empty { display: none; }
+.auth__steps span {
+  flex: 1; height: 4px; border-radius: 99px;
+  background: var(--line-soft);
+  transition: background .3s;
+}
+.auth__steps span.is-done { background: var(--green); }
+
+.auth__card { padding: 24px; }
+
+.auth__divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 16px 0; color: var(--muted-2); font-size: 11px;
+}
+.auth__divider::before, .auth__divider::after {
+  content: ""; flex: 1; height: 1px; background: var(--line-soft);
+}
+
+.auth__providericon {
+  width: 18px; height: 18px; border-radius: 5px; display: inline-block;
+}
+.auth__providericon--mm { background: linear-gradient(135deg, #f6851b, #e2761b); }
+.auth__providericon--wc { background: linear-gradient(135deg, #3b99fc, #2b6de8); }
+
+.auth__terms {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 12.5px; color: var(--muted); line-height: 1.5;
+  margin-bottom: 16px; cursor: pointer;
+}
+.auth__terms input { accent-color: var(--green); margin-top: 2px; }
+
+.auth__center { text-align: center; }
+.auth__ringbox {
+  margin: 6px auto 14px; width: 62px; height: 62px;
+  border-radius: 999px; border: 2px solid var(--line);
+  color: var(--green);
+  display: flex; align-items: center; justify-content: center;
+}
+.auth__desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin: 0 0 18px; }
+.auth__skip {
+  font-size: 12.5px; color: var(--muted);
+  cursor: pointer; text-decoration: underline;
+}
+
+.auth__check {
+  width: 56px; height: 56px; margin: 4px auto 12px;
+  border-radius: 999px; border: 2px solid var(--green); color: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  animation: glowRing 1.6s ease infinite;
+}
+.auth__done { margin: 0 0 6px; font-size: 18px; font-weight: 800; }
+.auth__wallet { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+
+.auth__spinner { margin: 0 auto 14px; }
+.auth__connlabel { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+
+.auth__switch { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
+.auth__switch a { color: var(--green); cursor: pointer; font-weight: 600; text-decoration: none; }
+.auth__legal {
+  text-align: center; font-size: 11px; color: var(--muted-2);
+  margin-top: 14px; line-height: 1.5;
+}
+
+/* Botones de proveedor (paso 2) */
+.auth__provider { margin-bottom: 10px; }
