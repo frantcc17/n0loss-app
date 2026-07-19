@@ -1,1 +1,29 @@
+<!-- ============================================================
+  components/Charts/Chart.html — Contenedores de gráficas
+  Chart.js dibuja en canvas nativo (sin librerías externas)
+============================================================= -->
 
+<!-- Gráfica estándar (área o barras) -->
+<template id="tpl-chart">
+  <div class="chart">
+    <canvas class="chart__canvas"></canvas>
+  </div>
+</template>
+
+<!-- Donut con leyenda lateral -->
+<template id="tpl-chart-donut">
+  <div class="chart chart--donut">
+    <canvas class="chart__canvas chart__canvas--donut"></canvas>
+    <div class="chart__legend"></div>
+  </div>
+</template>
+
+<!-- Fila de leyenda -->
+<template id="tpl-chart-legend-row">
+  <div class="chart__legend-row">
+    <span class="chart__legend-name">
+      <span class="chart__legend-dot" style="background: {{color}}"></span>{{label}}
+    </span>
+    <span class="mono">{{value}}</span>
+  </div>
+</template>
