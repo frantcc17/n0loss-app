@@ -1,1 +1,26 @@
+<!-- ============================================================
+  components/Card/Card.html — Plantillas de tarjetas reutilizables
+  Card.js las selecciona por id y rellena los {{placeholders}}
+============================================================= -->
 
+<!-- Tarjeta de estadística: etiqueta pequeña + valor grande -->
+<template id="tpl-card-stat">
+  <div class="card card--stat">
+    <div class="label">{{label}}</div>
+    <div class="num card-stat__value" style="color: var({{color}})">{{value}}</div>
+    <div class="card-stat__sub text-muted-2">{{sub}}</div>
+  </div>
+</template>
+
+<!-- Tarjeta panel: título + cuerpo libre (el cuerpo lo inserta JS) -->
+<template id="tpl-card-panel">
+  <div class="card card--panel">
+    <div class="card-panel__title">{{title}}</div>
+    <div class="card-panel__body"></div>
+  </div>
+</template>
+
+<!-- Tarjeta de aviso (info | warn | danger) -->
+<template id="tpl-card-notice">
+  <div class="card card--notice card--notice-{{kind}}">{{text}}</div>
+</template>
