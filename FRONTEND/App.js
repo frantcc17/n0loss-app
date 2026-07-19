@@ -77,26 +77,33 @@ async function renderShell(root) {
 
   root.innerHTML = `
     <header id="navbar-root"></header>
-    <div class="app-body">
-      <aside id="sidebar-root"></aside>
-      <main id="outlet" class="app-main"></main>
-    </div>
+    <main id="outlet" class="app-main"></main>
     <footer class="app-footer">
       Beta demostrativa · sin fondos reales · Polygon PoS · Whitepaper v1.2<br />
       N0Loss está en fase de constitución legal: nada aquí constituye oferta de servicios de inversión.
     </footer>`;
 
-  /* Componentes del shell (lote 2); si aún no existen, no rompen la app */
+  /* Navbar con la navegación arriba */
   try {
     const { default: Navbar } = await import("./components/Navbar/Navbar.js");
     await Navbar($("#navbar-root", root));
   } catch { /* Navbar pendiente */ }
-  try {
-    const { default: Sidebar } = await import("./components/Sidebar/Sidebar.js");
-    await Sidebar($("#sidebar-root", root));
-  } catch { /* Sidebar pendiente */ }
 
   await renderPage(store.get().route, $("#outlet", root));
+}
+
+/* ---------- Pantalla de carga ---------- */
+let splashHidden = false;
+function hideSplash() {
+  if (splashHidden) return;
+  splashHidden = true;
+  const splash = document.getElementById("splash");
+  if (!splash) return;
+  /* Duración mínima de 900 ms para que el logo y el eslogan se aprecien */
+  setTimeout(() => {
+    splash.classList.add("is-hidden");
+    setTimeout(() => splash.remove(), 500);
+  }, 900);
 }
 
 /* ---------- Arranque ---------- */
@@ -108,7 +115,7 @@ export default function App(root) {
       return;
     }
     store.set({ route });
-    renderShell(root);
+    renderShell(root).then(hideSplash);
   };
 
   window.addEventListener("hashchange", sync);
