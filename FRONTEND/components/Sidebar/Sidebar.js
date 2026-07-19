@@ -1,1 +1,79 @@
+/* ============================================================
+   components/Sidebar/Sidebar.css — Menú lateral
+   Escritorio: columna fija a la izquierda.
+   Móvil: barra horizontal deslizable bajo la navbar.
+   ============================================================ */
 
+.sidebar {
+  width: var(--sidebar-w);
+  flex: none;
+  padding: 24px 12px;
+  border-right: 1px solid var(--line-soft);
+  position: sticky;
+  top: var(--nav-h);
+  align-self: flex-start;
+  height: calc(100vh - var(--nav-h));
+  overflow-y: auto;
+}
+
+.sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  transition: background .15s ease, color .15s ease;
+}
+
+.sidebar__link:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.sidebar__link.is-active {
+  background: var(--green-tint);
+  color: var(--green);
+}
+
+.sidebar__icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 820px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: sticky;
+    top: var(--nav-h);
+    z-index: 30;
+    padding: 8px 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--line-soft);
+    background: rgba(242, 247, 241, 0.94);
+    backdrop-filter: blur(10px);
+  }
+  .sidebar__list {
+    flex-direction: row;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sidebar__list::-webkit-scrollbar { display: none; }
+  .sidebar__link { padding: 8px 12px; white-space: nowrap; }
+  .sidebar__link span:last-child { font-size: 13px; }
+}
