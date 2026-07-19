@@ -1,1 +1,25 @@
+<!-- ============================================================
+  components/Navbar/Navbar.html — Barra superior
+  Placeholders: {{wallet}} (dirección abreviada), {{cycle}} (ciclo)
+============================================================= -->
+<div class="navbar">
+  <div class="navbar__inner">
+    <a href="#/home" class="logo navbar__logo" aria-label="N0Loss — inicio">
+      N<svg class="logo__ring" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"></circle>
+        <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></line>
+      </svg>LOSS
+    </a>
 
+    <span class="badge badge--gold navbar__cycle">Ciclo {{cycle}} · sorteo el viernes</span>
+
+    <div class="navbar__spacer"></div>
+
+    <span class="navbar__wallet" title="Wallet conectada">
+      <span class="navbar__dot" aria-hidden="true"></span>
+      <span class="mono">{{wallet}}</span>
+    </span>
+
+    <button class="btn btn--ghost navbar__logout" data-action="logout">Salir</button>
+  </div>
+</div>
