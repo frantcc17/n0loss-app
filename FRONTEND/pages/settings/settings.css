@@ -1,1 +1,58 @@
+/* ============================================================
+   pages/Settings/Settings.css — Configuración y perfil
+   ============================================================ */
 
+.settings__grid { margin-top: 16px; align-items: start; }
+
+.settings__saved { font-size: 12.5px; margin-left: 10px; }
+.settings__saved:empty { display: none; }
+
+.settings__walletrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.settings__walletdot {
+  width: 8px; height: 8px; border-radius: 99px;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+.settings__net { margin-left: auto; }
+.settings__note { font-size: 12px; line-height: 1.5; margin: 12px 0 14px; }
+
+/* Preferencias con interruptor */
+.settings__pref {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line-soft);
+  cursor: pointer;
+}
+.settings__preflabel { display: block; font-size: 13px; font-weight: 600; }
+.settings__prefsub { display: block; font-size: 11.5px; }
+
+.settings__toggle {
+  appearance: none;
+  width: 40px; height: 22px; border-radius: 999px;
+  background: var(--line-soft);
+  position: relative;
+  cursor: pointer;
+  transition: background .2s;
+  flex: none;
+}
+.settings__toggle::after {
+  content: "";
+  position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16,42,31,.3);
+  transition: transform .2s;
+}
+.settings__toggle:checked { background: var(--green); }
+.settings__toggle:checked::after { transform: translateX(18px); }
+
+.settings__logout { color: var(--red); border-color: rgba(185, 74, 68, .35); }
