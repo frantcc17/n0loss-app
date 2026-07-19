@@ -1,1 +1,94 @@
+/* ============================================================
+   components/LotteryCard/LotteryCard.css — Tarjeta del sorteo
+   ============================================================ */
 
+.lotterycard {
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------- Rueda ---------- */
+.lotterycard__wheelwrap {
+  position: relative;
+  width: 300px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.lotterycard__pointer {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+.lotterycard__pointer path { fill: var(--gold); }
+
+.lotterycard__wheel {
+  width: 100%;
+  display: block;
+}
+.lotterycard__wheel.is-spinning {
+  transition: transform 6s cubic-bezier(0.12, 0.85, 0.09, 1);
+}
+
+.lotterycard__wheel text {
+  font-family: var(--mono);
+  font-size: 10.5px;
+}
+
+/* ---------- Zona de estado ---------- */
+.lotterycard__status {
+  min-height: 92px;
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lotterycard__start { padding: 14px 28px; font-size: 15px; }
+
+.lotterycard__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.lotterycard__stepspinner {
+  width: 22px; height: 22px; border-radius: 999px;
+  border: 2.5px solid var(--line-soft);
+  border-top-color: var(--green);
+  animation: spinLoad .8s linear infinite;
+  flex: none;
+}
+.lotterycard__stepnum { font-size: 10.5px; color: var(--muted-2); }
+.lotterycard__steptext > div:last-child { font-size: 13px; }
+
+/* ---------- Ganador ---------- */
+.lotterycard__winner { animation: popIn .35s ease; }
+.lotterycard__winnername { font-size: 26px; font-weight: 700; margin: 6px 0; }
+.lotterycard__prize { font-size: 16px; }
+.lotterycard__note { font-size: 12px; margin-top: 6px; }
+.lotterycard__again { margin-top: 14px; padding: 10px 20px; }
+
+/* ---------- Confeti ---------- */
+.lotterycard__confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+.lotterycard__confetti span {
+  position: absolute;
+  top: 0;
+  border-radius: 2px;
+  opacity: .9;
+  animation: confetti var(--dur, 3s) var(--delay, 0s) linear forwards;
+}
