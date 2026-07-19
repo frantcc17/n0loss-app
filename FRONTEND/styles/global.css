@@ -1,1 +1,175 @@
+/* ============================================================
+   N0LOSS — Estilos globales y variables de marca
+   Paleta: fondos pastel · verde oscuro para detalles · dorado premios
+   ============================================================ */
 
+:root {
+  /* Colores de marca */
+  --bg: #F2F7F1;            /* fondo pastel verde muy claro */
+  --bg-2: #E9F1E8;          /* inputs y cajas secundarias */
+  --panel: #FFFFFF;         /* tarjetas */
+  --panel-2: #F4FAF4;       /* cabeceras y zonas suaves */
+  --line: rgba(15, 74, 52, 0.16);
+  --line-soft: rgba(15, 74, 52, 0.09);
+
+  --green: #0F4A34;         /* verde oscuro — detalle principal */
+  --green-dim: #2F7A5B;
+  --green-tint: rgba(15, 74, 52, 0.10);
+  --gold: #B98A1F;          /* premios */
+  --gold-tint: rgba(185, 138, 31, 0.10);
+  --red: #B94A44;
+  --purple: #6C4FD8;        /* red Polygon */
+
+  --text: #13291F;
+  --muted: #54705F;
+  --muted-2: #8AA093;
+
+  /* Tipografía */
+  --font: 'Sora', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Métricas */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --nav-h: 58px;
+  --sidebar-w: 220px;
+  --maxw: 1080px;
+  --shadow: 0 24px 60px rgba(16, 42, 31, 0.28);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: var(--green); }
+::selection { background: var(--green); color: #fff; }
+
+/* ---------- Layout base de la app ---------- */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.app-body { display: flex; flex: 1; }
+.app-main {
+  flex: 1;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+  width: 100%;
+  animation: rise .35s ease;
+}
+
+/* ---------- Tipografía utilitaria ---------- */
+.h1 { font-size: 24px; font-weight: 800; margin: 0 0 4px; }
+.h2 { font-size: 17px; font-weight: 700; margin: 0 0 4px; }
+.sub { color: var(--muted); font-size: 13.5px; margin-top: 0; }
+.label {
+  font-size: 12px; color: var(--muted);
+  letter-spacing: .05em; text-transform: uppercase;
+}
+.mono { font-family: var(--mono); }
+.num { font-family: var(--mono); font-weight: 600; }
+.text-green { color: var(--green); }
+.text-gold { color: var(--gold); }
+.text-red { color: var(--red); }
+.text-muted { color: var(--muted); }
+.text-muted-2 { color: var(--muted-2); }
+
+/* ---------- Tarjeta base (Card.css la extiende) ---------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+/* ---------- Botones base (Button.css los extiende) ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 16px; border-radius: var(--radius-sm); border: none;
+  font-family: var(--font); font-weight: 700; font-size: 14px;
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease, background .12s ease;
+}
+.btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn--primary { background: var(--green); color: #fff; }
+.btn--ghost { background: transparent; color: var(--text); border: 1px solid var(--line); font-weight: 600; }
+.btn--gold { background: var(--gold); color: #fff; }
+.btn--block { width: 100%; }
+
+/* ---------- Inputs ---------- */
+.input, .select {
+  width: 100%; padding: 12px 14px;
+  border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font);
+  background: var(--bg-2); border: 1px solid var(--line); color: var(--text);
+}
+.input:focus, .select:focus { outline: none; border-color: var(--green); }
+.field { display: block; margin-bottom: 14px; }
+.field__label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+
+/* ---------- Badge ---------- */
+.badge {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--green); border: 1px solid rgba(15, 74, 52, .27);
+  border-radius: 999px; padding: 3px 10px; background: var(--green-tint);
+}
+.badge--gold { color: var(--gold); border-color: rgba(185, 138, 31, .27); background: var(--gold-tint); }
+
+/* ---------- Grids utilitarios ---------- */
+.grid { display: grid; gap: 16px; }
+.grid--cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.grid--stats { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+.grid--panels { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+/* ---------- Animaciones globales ---------- */
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes spinLoad { to { transform: rotate(360deg); } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes popIn { 0% { opacity: 0; transform: scale(.92); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes confetti {
+  0% { transform: translateY(-10vh) rotate(0); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+@keyframes glowRing {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(15, 74, 52, .28); }
+  50% { box-shadow: 0 0 0 14px rgba(15, 74, 52, 0); }
+}
+.spinner {
+  width: 42px; height: 42px; border-radius: 999px;
+  border: 3px solid var(--line-soft); border-top-color: var(--green);
+  animation: spinLoad .8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ---------- Marca: el "0" como anillo ---------- */
+.logo {
+  display: inline-flex; align-items: center; gap: 2px;
+  font-weight: 800; letter-spacing: -0.02em; color: var(--text);
+  text-decoration: none;
+}
+.logo__ring { flex: none; }
+
+/* ---------- Placeholder de páginas en construcción ---------- */
+.placeholder {
+  text-align: center; padding: 80px 20px; color: var(--muted);
+}
+.placeholder .badge { margin-bottom: 14px; display: inline-block; }
+
+/* ---------- Shell adicional ---------- */
+.app-main--full { max-width: none; padding: 0; }
+.app-footer {
+  border-top: 1px solid var(--line-soft);
+  padding: 18px 20px; text-align: center;
+  font-size: 11.5px; color: var(--muted-2); line-height: 1.6;
+}
