@@ -1,1 +1,111 @@
+<!-- ============================================================
+  pages/Auth/Auth.html — Inicio de sesión y registro
+  Auth.js alterna las vistas: login | reg1 | reg2 | reg3
+============================================================= -->
 
+<!-- Marco común: logo + tarjeta + pie -->
+<template id="tpl-auth">
+  <div class="auth">
+    <div class="auth__box">
+      <div class="auth__head">
+        <span class="logo auth__logo">
+          N<svg class="logo__ring" width="25" height="25" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"></circle>
+            <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></line>
+          </svg>LOSS
+        </span>
+        <div class="auth__badge"><span class="badge">Beta cerrada · Polygon testnet</span></div>
+        <p class="auth__tagline" data-slot="tagline"></p>
+      </div>
+      <div class="auth__steps" data-slot="steps"></div>
+      <div class="card auth__card" data-slot="view"></div>
+      <p class="auth__switch" data-slot="switch"></p>
+      <p class="auth__legal">Demo sin fondos reales. N0Loss está en fase de constitución legal y no acepta depósitos.</p>
+    </div>
+  </div>
+</template>
+
+<!-- Vista: inicio de sesión -->
+<template id="tpl-auth-login">
+  <label class="field">
+    <span class="field__label">Correo electrónico</span>
+    <input class="input" type="email" name="email" placeholder="tu@correo.com" autocomplete="email" />
+  </label>
+  <label class="field">
+    <span class="field__label">Contraseña</span>
+    <input class="input" type="password" name="password" placeholder="••••••••" autocomplete="current-password" />
+  </label>
+  <button class="btn btn--primary btn--block" data-action="login">Entrar</button>
+  <div class="auth__divider"><span>O</span></div>
+  <button class="btn btn--ghost btn--block" data-action="connect-login">
+    <span class="auth__providericon auth__providericon--mm" aria-hidden="true"></span>
+    Conectar wallet
+  </button>
+</template>
+
+<!-- Registro · paso 1: datos -->
+<template id="tpl-auth-reg1">
+  <label class="field">
+    <span class="field__label">Correo electrónico</span>
+    <input class="input" type="email" name="email" placeholder="tu@correo.com" autocomplete="email" />
+  </label>
+  <label class="field">
+    <span class="field__label">Contraseña</span>
+    <input class="input" type="password" name="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+  </label>
+  <label class="field">
+    <span class="field__label">País</span>
+    <select class="select" name="country">
+      <option>España</option><option>México</option><option>Argentina</option>
+      <option>Colombia</option><option>Estados Unidos</option><option>Otro</option>
+    </select>
+  </label>
+  <label class="auth__terms">
+    <input type="checkbox" name="terms" />
+    Acepto los Términos de servicio y la Política de privacidad. Entiendo que la beta no acepta depósitos reales.
+  </label>
+  <button class="btn btn--primary btn--block" data-action="reg-next">Continuar</button>
+</template>
+
+<!-- Registro · paso 2: conectar wallet -->
+<template id="tpl-auth-reg2">
+  <div class="auth__center">
+    <div class="auth__ringbox" aria-hidden="true">
+      <svg width="30" height="30" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"></circle>
+        <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></line>
+      </svg>
+    </div>
+    <h3 class="h2">Conecta tu wallet</h3>
+    <p class="auth__desc">
+      N0Loss es no-custodio: tus fondos viven en tu wallet y en el Vault (ERC-4626),
+      nunca en nuestras cuentas. El gas está patrocinado por el protocolo.
+    </p>
+    <div data-slot="providers"></div>
+    <a class="auth__skip" data-action="reg-skip">Saltar por ahora</a>
+  </div>
+</template>
+
+<!-- Registro · paso 3: cuenta creada -->
+<template id="tpl-auth-reg3">
+  <div class="auth__center">
+    <div class="auth__check" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <h3 class="auth__done">Cuenta creada</h3>
+    <div class="mono auth__wallet">{{wallet}}</div>
+    <p class="auth__desc">Ya puedes hacer tu primer depósito. Mínimo 10 USDC — 1 ticket por cada 10 USDC.</p>
+    <button class="btn btn--primary btn--block" data-action="reg-finish">Ir a mi panel</button>
+  </div>
+</template>
+
+<!-- Estado conectando (paso 2) -->
+<template id="tpl-auth-connecting">
+  <div class="auth__center">
+    <div class="spinner auth__spinner"></div>
+    <div class="auth__connlabel">Abriendo {{provider}}…</div>
+    <div class="auth__desc">Aprueba la conexión (eth_requestAccounts).</div>
+  </div>
+</template>
