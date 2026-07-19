@@ -1,1 +1,40 @@
+<!-- ============================================================
+  pages/Vault/Vault.html — Gestión del vault
+============================================================= -->
 
+<template id="tpl-vault">
+  <div class="vault">
+    <h1 class="h1">Vault</h1>
+    <p class="sub">Tu capital en el Vault ERC-4626. El rendimiento del subyacente (Ondo OUSG) financia los premios; tu depósito nunca se toca.</p>
+
+    <div class="grid grid--stats vault__stats" data-slot="stats"></div>
+
+    <div class="grid grid--panels vault__panels">
+      <div data-slot="vaultcard"></div>
+
+      <div class="card">
+        <div class="card-panel__title">Reparto del rendimiento (α / β / γ)</div>
+        <div data-slot="split"></div>
+        <p class="vault__splitnote text-muted-2">
+          Se aplica sobre el rendimiento generado, nunca sobre el capital depositado.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-panel__title">Contratos del protocolo</div>
+        <div data-slot="contracts"></div>
+        <p class="vault__splitnote text-muted-2">
+          Todos los flujos son verificables on-chain en Polygonscan.
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Fila de contrato -->
+<template id="tpl-vault-contract">
+  <div class="vault__contract">
+    <span class="vault__contractname">{{name}}</span>
+    <span class="mono text-green vault__contractaddr">{{addr}} ↗</span>
+  </div>
+</template>
