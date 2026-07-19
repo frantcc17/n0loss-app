@@ -1,1 +1,44 @@
+/* ============================================================
+   components/Charts/Chart.css — Gráficas y charts
+   ============================================================ */
 
+.chart { width: 100%; }
+.chart__canvas {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+/* Donut con leyenda a la derecha */
+.chart--donut {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.chart__canvas--donut {
+  width: 180px;
+  height: 180px;
+  flex: none;
+}
+.chart__legend { flex: 1; min-width: 160px; }
+
+.chart__legend-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.chart__legend-name {
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chart__legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  display: inline-block;
+}
