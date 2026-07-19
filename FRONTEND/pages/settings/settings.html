@@ -1,1 +1,67 @@
+<!-- ============================================================
+  pages/Settings/Settings.html — Configuración y perfil
+============================================================= -->
 
+<template id="tpl-settings">
+  <div class="settings">
+    <h1 class="h1">Ajustes</h1>
+    <p class="sub">Tu perfil, tu wallet y las preferencias de la cuenta.</p>
+
+    <div class="grid grid--panels settings__grid">
+      <div class="card">
+        <div class="card-panel__title">Perfil</div>
+        <label class="field">
+          <span class="field__label">Correo electrónico</span>
+          <input class="input" type="email" name="email" value="{{email}}" />
+        </label>
+        <label class="field">
+          <span class="field__label">País</span>
+          <select class="select" name="country">
+            <option>España</option><option>México</option><option>Argentina</option>
+            <option>Colombia</option><option>Estados Unidos</option><option>Otro</option>
+          </select>
+        </label>
+        <button class="btn btn--primary" data-action="save">Guardar cambios</button>
+        <span class="settings__saved text-green" data-slot="saved"></span>
+      </div>
+
+      <div class="card">
+        <div class="card-panel__title">Wallet</div>
+        <div class="settings__walletrow">
+          <span class="settings__walletdot" aria-hidden="true"></span>
+          <span class="mono">{{wallet}}</span>
+          <span class="badge settings__net">Polygon</span>
+        </div>
+        <p class="settings__note text-muted-2">
+          N0Loss es no-custodio: esta wallet controla tus fondos. El gas de todas
+          las operaciones está patrocinado por el protocolo (ERC-2771).
+        </p>
+        <button class="btn btn--ghost" data-action="copy">Copiar dirección</button>
+      </div>
+
+      <div class="card">
+        <div class="card-panel__title">Notificaciones</div>
+        <div data-slot="prefs"></div>
+      </div>
+
+      <div class="card settings__danger">
+        <div class="card-panel__title">Sesión</div>
+        <p class="settings__note text-muted-2">
+          Cerrar sesión no afecta a tus fondos: siguen en el Vault vinculados a tu wallet.
+        </p>
+        <button class="btn btn--ghost settings__logout" data-action="logout">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Preferencia con interruptor -->
+<template id="tpl-settings-pref">
+  <label class="settings__pref">
+    <span>
+      <span class="settings__preflabel">{{label}}</span>
+      <span class="settings__prefsub text-muted-2">{{sub}}</span>
+    </span>
+    <input type="checkbox" class="settings__toggle" {{checked}} />
+  </label>
+</template>
