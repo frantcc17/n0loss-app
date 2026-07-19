@@ -13,10 +13,86 @@
 
   <!-- Estilos globales (los CSS de cada componente los inyecta su propio JS) -->
   <link rel="stylesheet" href="./styles/global.css" />
+
+  <!-- Estilos del splash incrustados: no dependen de global.css -->
+  <style>
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(205, 232, 214, .67), transparent),
+        #F2F7F1;
+      font-family: 'Sora', system-ui, sans-serif;
+      transition: opacity .45s ease;
+    }
+    #splash.is-hidden { opacity: 0; pointer-events: none; }
+
+    #splash .splash__logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 800;
+      font-size: 56px;
+      letter-spacing: -0.02em;
+      color: #13291F;
+      animation: splashRise .6s ease;
+    }
+    #splash .splash__ring {
+      color: #0F4A34;
+      animation: splashSpin 2.4s cubic-bezier(.6, .05, .3, .95) infinite;
+    }
+    #splash .splash__slogan {
+      margin: 0;
+      font-size: 16px;
+      color: #54705F;
+      letter-spacing: .01em;
+      animation: splashRise .6s ease .1s backwards;
+    }
+    #splash .splash__bar {
+      width: 180px;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(15, 74, 52, .09);
+      overflow: hidden;
+      margin-top: 10px;
+      animation: splashRise .6s ease .2s backwards;
+    }
+    #splash .splash__bar span {
+      display: block;
+      height: 100%;
+      width: 40%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #2F7A5B, #0F4A34);
+      animation: splashBar 1.1s ease-in-out infinite;
+    }
+    @keyframes splashSpin {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes splashBar {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+    @keyframes splashRise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 480px) {
+      #splash .splash__logo { font-size: 42px; }
+      #splash .splash__ring { width: 38px; height: 38px; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Pantalla de carga: visible desde el primer instante, App.js la retira -->
-  <div id="splash" class="splash" aria-hidden="true">
+  <!-- Pantalla de carga: visible desde el primer instante; App.js la retira -->
+  <div id="splash" aria-hidden="true">
     <div class="splash__logo">
       N<svg class="splash__ring" width="52" height="52" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"></circle>
@@ -26,6 +102,17 @@
     <p class="splash__slogan">Protege lo que construyes</p>
     <div class="splash__bar"><span></span></div>
   </div>
+
+  <!-- Seguro de respaldo: si App.js no lo retirase, desaparece a los 4 s -->
+  <script>
+    setTimeout(function () {
+      var s = document.getElementById("splash");
+      if (s) {
+        s.classList.add("is-hidden");
+        setTimeout(function () { s.remove(); }, 500);
+      }
+    }, 4000);
+  </script>
 
   <!-- Raíz de la aplicación: App.js monta aquí navbar y la página activa -->
   <div id="app" class="app"></div>
