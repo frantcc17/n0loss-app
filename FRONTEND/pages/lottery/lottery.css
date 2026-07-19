@@ -1,1 +1,41 @@
+/* ============================================================
+   pages/Lottery/Lottery.css — Página de sorteos
+   ============================================================ */
 
+.lottery__grid { margin-top: 16px; align-items: start; }
+
+.lottery__formula { font-size: 12px; margin-top: 0; }
+
+.lottery__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.lottery__dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.lottery__name { font-size: 12.5px; flex: 1; }
+.lottery__name.is-you { color: var(--green); font-weight: 700; }
+.lottery__score { font-size: 12px; }
+.lottery__pct { font-size: 12px; width: 62px; text-align: right; }
+
+.lottery__cta { font-size: 12.5px; margin: 12px 0 0; }
+.lottery__cta:empty { display: none; }
+
+.lottery__history { margin-top: 16px; }
+.lottery__tablewrap { overflow-x: auto; }
+.lottery__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.lottery__table th {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted-2);
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+}
+.lottery__table td { padding: 9px 8px; }
