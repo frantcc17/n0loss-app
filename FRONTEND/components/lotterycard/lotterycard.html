@@ -1,1 +1,44 @@
+<!-- ============================================================
+  components/LotteryCard/LotteryCard.html — Tarjeta del sorteo
+  La rueda SVG la construye LotteryCard.js según los participantes
+============================================================= -->
+<template id="tpl-lotterycard">
+  <div class="card lotterycard">
+    <div class="lotterycard__confetti" data-slot="confetti"></div>
 
+    <div class="lotterycard__wheelwrap">
+      <svg class="lotterycard__pointer" width="26" height="20" viewBox="0 0 26 20" aria-hidden="true">
+        <path d="M13 20 L2 2 L24 2 Z"></path>
+      </svg>
+      <svg class="lotterycard__wheel" viewBox="0 0 300 300" data-slot="wheel"></svg>
+    </div>
+
+    <div class="lotterycard__status" data-slot="status">
+      <button class="btn btn--gold lotterycard__start" data-action="run">
+        Iniciar sorteo · bote {{prize}} USDC
+      </button>
+    </div>
+  </div>
+</template>
+
+<!-- Paso VRF en curso -->
+<template id="tpl-lottery-step">
+  <div class="lotterycard__step">
+    <div class="lotterycard__stepspinner" aria-hidden="true"></div>
+    <div class="lotterycard__steptext">
+      <div class="mono lotterycard__stepnum">PASO {{n}}/3</div>
+      <div>{{label}}</div>
+    </div>
+  </div>
+</template>
+
+<!-- Resultado -->
+<template id="tpl-lottery-winner">
+  <div class="lotterycard__winner">
+    <div class="label">{{heading}}</div>
+    <div class="num lotterycard__winnername {{nameClass}}">{{name}}</div>
+    <div class="num text-gold lotterycard__prize">+{{prize}} USDC</div>
+    <div class="lotterycard__note text-muted-2">{{note}}</div>
+    <button class="btn btn--ghost lotterycard__again" data-action="run">Repetir simulación</button>
+  </div>
+</template>
