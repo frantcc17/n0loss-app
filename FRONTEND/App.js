@@ -8,6 +8,7 @@ import { ROUTES, DEFAULT_ROUTE, DEMO_WALLET } from "./utils/constants.js";
 export const store = createStore({
   user: null,               // { email, country, wallet } | null
   balance: 0,               // USDC en el Vault
+  available: 0,             // saldo disponible para comprar tickets
   cyclesConsecutive: 0,     // racha sin retirar (constancia)
   cyclesTotal: 0,           // ciclos históricos participados
   pendingPrize: 0,          // premio pendiente de reclamar (pull-payment)
@@ -19,14 +20,15 @@ export const store = createStore({
 export function loginDemo(email) {
   store.set({
     user: { email: email || "demo@n0loss.com", wallet: DEMO_WALLET },
-    balance: 2500,
-    cyclesConsecutive: 3,
-    cyclesTotal: 6,
+    balance: 0,
+    available: 10000,
+    cyclesConsecutive: 0,
+    cyclesTotal: 0,
   });
 }
 export function logout() {
   store.set({
-    user: null, balance: 0, cyclesConsecutive: 0, cyclesTotal: 0,
+    user: null, balance: 0, available: 0, cyclesConsecutive: 0, cyclesTotal: 0,
     pendingPrize: 0, suspended: false,
   });
   location.hash = "#/auth";
@@ -103,7 +105,7 @@ function hideSplash() {
   setTimeout(() => {
     splash.classList.add("is-hidden");
     setTimeout(() => splash.remove(), 500);
-  }, 900);
+  }, 2900);
 }
 
 /* ---------- Arranque ---------- */
