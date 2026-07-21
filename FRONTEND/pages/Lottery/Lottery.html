@@ -1,27 +1,37 @@
-<!-- ============================================================
-  pages/Lottery/Lottery.html — Página de sorteos
-============================================================= -->
-
 <template id="tpl-lottery">
   <div class="lottery">
     <h1 class="h1">Sorteo semanal</h1>
     <p class="sub">Lotería ponderada por Reputation Score, con aleatoriedad verificable de Chainlink VRF v2.5. Simulación de la beta.</p>
 
     <div class="grid grid--panels lottery__grid">
-      <div data-slot="wheel"></div>
+      
+      <div class="card lottery__vrf-container">
+        <div class="card-panel__title">Motor de Selección · Chainlink VRF</div>
+        
+        <div class="lottery__vrf-screen">
+          <div class="text-muted-2 text-xs mono">CHAINLINK VRF V2.5 STATUS: IDLE</div>
+          <div class="lottery__random-word mono" data-slot="random-word">0x0000000000000000000000000000000000000000000000000000000000000000</div>
+        </div>
+
+        <div class="lottery__matrix-display" data-slot="matrix-display">
+          </div>
+
+        <div class="lottery__action-bar" data-slot="cta-container">
+          <p class="lottery__cta text-gold" data-slot="cta"></p>
+        </div>
+      </div>
 
       <div class="card">
         <div class="card-panel__title">Participantes de la ronda (muestra)</div>
         <p class="lottery__formula text-muted-2">
-          P(ganar) = Score / Σ Scores. TVL &lt; 100M USDC → un único ganador se lleva el 100% del bote.
+          P(ganar) = Score / Σ Scores. TVL &lt; 100M USDC → un único ganador se lleva el 100% del bote[cite: 95, 99].
         </p>
         <div data-slot="participants"></div>
-        <p class="lottery__cta text-gold" data-slot="cta"></p>
       </div>
     </div>
 
     <div class="card lottery__history">
-      <div class="card-panel__title">Últimos sorteos · Chainlink VRF v2.5</div>
+      <div class="card-panel__title">Últimos sorteos · Chainlink VRF v2.5 [cite: 97]</div>
       <div class="lottery__tablewrap">
         <table class="lottery__table">
           <thead>
@@ -34,9 +44,15 @@
   </div>
 </template>
 
-<!-- Fila de participante -->
+<template id="tpl-lottery-matrix-node">
+  <div class="matrix-node" data-addr="{{address}}" style="--user-color: {{color}}">
+    <span class="matrix-node__status-dot"></span>
+    <span class="mono text-xs">{{shortAddress}}</span>
+  </div>
+</template>
+
 <template id="tpl-lottery-participant">
-  <div class="lottery__row">
+  <div class="lottery__row" data-participant-addr="{{address}}">
     <span class="lottery__dot" style="background: {{color}}"></span>
     <span class="mono lottery__name {{nameClass}}">{{name}}</span>
     <span class="mono text-muted lottery__score">score {{score}}</span>
@@ -44,7 +60,6 @@
   </div>
 </template>
 
-<!-- Fila de sorteo pasado -->
 <template id="tpl-lottery-draw">
   <tr>
     <td class="mono text-muted">#{{cycle}}</td>
