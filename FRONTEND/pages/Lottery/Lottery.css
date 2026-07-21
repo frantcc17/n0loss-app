@@ -1,18 +1,132 @@
 /* ============================================================
-   pages/Lottery/Lottery.css — Página de sorteos
+   pages/Lottery/Lottery.css — Página de sorteos (Cascada de Hash)
    ============================================================ */
 
 .lottery__grid { margin-top: 16px; align-items: start; }
 
 .lottery__formula { font-size: 12px; margin-top: 0; }
 
+/* ------------------------------------------------------------
+   MOTOR DE SELECCIÓN · CHAINLINK VRF (Panel izquierdo)
+   ------------------------------------------------------------ */
+.lottery__vrf-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Pantalla del Random Word Semilla */
+.lottery__vrf-screen {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.lottery__random-word {
+  font-size: 13px;
+  color: var(--gold);
+  word-break: break-all;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+/* Matriz/Grilla Visual del descarte de Wallets */
+.lottery__matrix-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Bloque compacto para la Matriz Visual (Nodo) */
+.matrix-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.matrix-node__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--user-color, var(--muted-2));
+  flex: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Estados dinámicos controlados mediante JS */
+.matrix-node.is-evaluating {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.08);
+  animation: matrix-pulse 0.4s infinite alternate;
+}
+
+.matrix-node.is-evaluating .matrix-node__status-dot {
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.matrix-node.is-discarded {
+  opacity: 0.25;
+  filter: grayscale(100%);
+  border-color: transparent;
+  background: transparent;
+}
+
+.matrix-node.is-winner {
+  border-color: var(--green);
+  background: rgba(0, 200, 83, 0.12);
+  transform: scale(1.04);
+  box-shadow: 0 0 12px rgba(0, 200, 83, 0.2);
+  z-index: 2;
+}
+
+.matrix-node.is-winner .matrix-node__status-dot {
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green);
+}
+
+.lottery__action-bar {
+  border-top: 1px solid var(--line-soft);
+  padding-top: 4px;
+}
+
+/* ------------------------------------------------------------
+   PANEL DE PARTICIPANTES (Panel derecho)
+   ------------------------------------------------------------ */
 .lottery__row {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 0;
   border-bottom: 1px solid var(--line-soft);
+  transition: opacity 0.3s ease, background 0.3s ease;
 }
+
+/* Sincronización visual cuando el participante es descartado o gana */
+.lottery__row.is-discarded {
+  opacity: 0.3;
+}
+
+.lottery__row.is-winner {
+  background: rgba(0, 200, 83, 0.05);
+  border-bottom-color: var(--green);
+  padding-left: 6px;
+  padding-right: 6px;
+  border-radius: 4px;
+}
+
 .lottery__dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
 .lottery__name { font-size: 12.5px; flex: 1; }
 .lottery__name.is-you { color: var(--green); font-weight: 700; }
@@ -22,6 +136,9 @@
 .lottery__cta { font-size: 12.5px; margin: 12px 0 0; }
 .lottery__cta:empty { display: none; }
 
+/* ------------------------------------------------------------
+   HISTORIAL DE SORTEOS
+   ------------------------------------------------------------ */
 .lottery__history { margin-top: 16px; }
 .lottery__tablewrap { overflow-x: auto; }
 .lottery__table {
@@ -39,3 +156,9 @@
   font-weight: 500;
 }
 .lottery__table td { padding: 9px 8px; }
+
+/* ANIMACIONES */
+@keyframes matrix-pulse {
+  0% { background: rgba(212, 175, 55, 0.04); }
+  100% { background: rgba(212, 175, 55, 0.15); }
+}
