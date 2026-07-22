@@ -1,140 +1,89 @@
 /* ============================================================
-   services/wallet.js — Wallet + Abstracción de cuenta (ERC-4337)
-   Red: Polygon Amoy (testnet, chainId 80002)
-   Stack: viem + permissionless.js + Pimlico (bundler + paymaster)
+   chain.js — Abstracción de cuenta (ERC-4337) en Polygon Amoy.
+   viem + permissionless + Pimlico (bundler + paymaster).
    ============================================================ */
+import { createPublicClient, http, getAddress } from "viem";
+import { polygonAmoy } from "viem/chains";
+import { privateKeyToAccount, generatePrivateKey } from "viem/accounts";
+import { entryPoint07Address } from "viem/account-abstraction";
+import { createSmartAccountClient } from "permissionless";
+import { toSimpleSmartAccount } from "permissionless/accounts";
+import { createPimlicoClient } from "permissionless/clients/pimlico";
+import { decryptSecret } from "./crypto.js";
 
-import {
-  createPublicClient,
-  createWalletClient,
-  custom,
-  http,
-} from "https://esm.sh/viem@2";
-import { polygonAmoy } from "https://esm.sh/viem@2/chains";
-import {
-  privateKeyToAccount,
-  generatePrivateKey,
-} from "https://esm.sh/viem@2/accounts";
-import { entryPoint07Address } from "https://esm.sh/viem@2/account-abstraction";
-import { createSmartAccountClient } from "https://esm.sh/permissionless@0.2";
-import { toSimpleSmartAccount } from "https://esm.sh/permissionless@0.2/accounts";
-import { createPimlicoClient } from "https://esm.sh/permissionless@0.2/clients/pimlico";
+const AMOY_RPC = process.env.AMOY_RPC || "https://rpc-amoy.polygon.technology";
+const pimlicoUrl = () =>
+  `https://api.pimlico.io/v2/polygon-amoy/rpc?apikey=${process.env.PIMLICO_API_KEY}`;
 
-import {
-  AMOY_RPC,
-  PIMLICO_API_KEY,
-  PIMLICO_SPONSORSHIP_POLICY_ID,
-} from "../utils/constants.js";
+const entryPoint = { address: entryPoint07Address, version: "0.7" };
 
-export const PROVIDERS = [
-  { id: "metamask", label: "MetaMask" },
-  { id: "walletconnect", label: "WalletConnect" },
-];
-
-const AMOY_HEX = "0x13882"; // 80002
-const pimlicoUrl = `https://api.pimlico.io/v2/polygon-amoy/rpc?apikey=${PIMLICO_API_KEY}`;
-
-const publicClient = createPublicClient({
+export const publicClient = createPublicClient({
   chain: polygonAmoy,
   transport: http(AMOY_RPC),
 });
 
-const pimlicoClient = createPimlicoClient({
-  transport: http(pimlicoUrl),
-  entryPoint: { address: entryPoint07Address, version: "0.7" },
-});
+const pimlicoClient = () =>
+  createPimlicoClient({ transport: http(pimlicoUrl()), entryPoint });
 
-async function buildSmartAccount(owner) {
+const paymasterContext = () =>
+  process.env.PIMLICO_SPONSORSHIP_POLICY_ID
+    ? { sponsorshipPolicyId: process.env.PIMLICO_SPONSORSHIP_POLICY_ID }
+    : undefined;
+
+/**
+ * Dirección contrafactual de la cuenta inteligente para un firmante dado.
+ * Es determinista: la misma EOA siempre produce la misma cuenta, y la
+ * cuenta no se despliega hasta la primera operación (el despliegue va
+ * incluido en la primera userOp y también lo paga el paymaster).
+ */
+export async function predictSmartAccount(ownerAddress) {
   const account = await toSimpleSmartAccount({
     client: publicClient,
-    owner,
-    entryPoint: { address: entryPoint07Address, version: "0.7" },
+    owner: { address: getAddress(ownerAddress), type: "local" },
+    entryPoint,
   });
+  return getAddress(account.address);
+}
 
-  const client = createSmartAccountClient({
+/**
+ * Genera un firmante nuevo, propiedad del servidor, y devuelve la
+ * clave privada en claro para que quien llama la cifre de inmediato.
+ */
+export async function createManagedWallet() {
+  const privateKey = generatePrivateKey();
+  const owner = privateKeyToAccount(privateKey);
+  const smartAccount = await predictSmartAccount(owner.address);
+  return { privateKey, ownerAddress: owner.address, smartAccount };
+}
+
+/**
+ * Cliente listo para enviar userOps con gas patrocinado, para un usuario
+ * de tipo 'managed'. Los usuarios 'external' firman desde su propia wallet
+ * en el navegador (services/wallet.js).
+ */
+export async function smartAccountClientForUser(user) {
+  if (user.signer_kind !== "managed") {
+    throw new Error("Esta cuenta firma desde la wallet del usuario.");
+  }
+  const owner = privateKeyToAccount(decryptSecret(user.signer_secret));
+  const account = await toSimpleSmartAccount({ client: publicClient, owner, entryPoint });
+  const pimlico = pimlicoClient();
+
+  return createSmartAccountClient({
     account,
     chain: polygonAmoy,
-    bundlerTransport: http(pimlicoUrl),
-    paymaster: pimlicoClient,
-    paymasterContext: PIMLICO_SPONSORSHIP_POLICY_ID
-      ? { sponsorshipPolicyId: PIMLICO_SPONSORSHIP_POLICY_ID }
-      : undefined,
+    bundlerTransport: http(pimlicoUrl()),
+    paymaster: pimlico,
+    paymasterContext: paymasterContext(),
     userOperation: {
       estimateFeesPerGas: async () =>
-        (await pimlicoClient.getUserOperationGasPrice()).fast,
+        (await pimlico.getUserOperationGasPrice()).fast,
     },
   });
-
-  // Dirección del firmante (EOA), útil para guardarla junto al enlace.
-  const ownerAddress = owner?.address ?? owner?.account?.address ?? null;
-
-  return { address: account.address, ownerAddress, client, account, owner };
 }
 
-/* Camino 1 — Wallet externa como firmante */
-export async function connectSmartAccount(providerId = "metamask") {
-  const provider = await getInjectedProvider(providerId);
-  if (!provider) {
-    throw new Error("No se detectó ninguna wallet. Instala MetaMask o usa WalletConnect.");
-  }
-
-  const [addr] = await provider.request({ method: "eth_requestAccounts" });
-  await ensureAmoy(provider);
-
-  const walletClient = createWalletClient({
-    account: addr,
-    chain: polygonAmoy,
-    transport: custom(provider),
-  });
-
-  return buildSmartAccount(walletClient);
-}
-
-/* Camino 2 — Firmante embebido (SOLO DEMO/TESTNET) */
-export async function createEmbeddedSmartAccount(email) {
-  const key = `n0loss:signer:${(email || "anon").toLowerCase()}`;
-  let pk = localStorage.getItem(key);
-  if (!pk) {
-    pk = generatePrivateKey();
-    localStorage.setItem(key, pk);
-  }
-  const owner = privateKeyToAccount(pk);
-  return buildSmartAccount(owner);
-}
-
-/* Compatibilidad: connect() devolvía una dirección */
-export async function connect(providerId = "metamask") {
-  const sa = await connectSmartAccount(providerId);
-  return sa.address;
-}
-
-/* ---------------------------- helpers ---------------------------- */
-async function getInjectedProvider(providerId) {
-  if (providerId === "metamask") return window.ethereum ?? null;
-  if (providerId === "walletconnect") return window.ethereum ?? null; // TODO: WC provider real
-  return window.ethereum ?? null;
-}
-
-async function ensureAmoy(provider) {
-  try {
-    await provider.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: AMOY_HEX }],
-    });
-  } catch (err) {
-    if (err?.code === 4902) {
-      await provider.request({
-        method: "wallet_addEthereumChain",
-        params: [{
-          chainId: AMOY_HEX,
-          chainName: "Polygon Amoy",
-          nativeCurrency: { name: "POL", symbol: "POL", decimals: 18 },
-          rpcUrls: [AMOY_RPC],
-          blockExplorerUrls: ["https://amoy.polygonscan.com"],
-        }],
-      });
-    } else {
-      throw err;
-    }
-  }
+/** ¿Está ya desplegado el contrato de la cuenta? */
+export async function isDeployed(address) {
+  const code = await publicClient.getCode({ address: getAddress(address) });
+  return !!code && code !== "0x";
 }
