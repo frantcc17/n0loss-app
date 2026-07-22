@@ -1,111 +1,223 @@
-<!-- ============================================================
-  pages/Auth/Auth.html — Inicio de sesión y registro
-  Auth.js alterna las vistas: login | reg1 | reg2 | reg3
-============================================================= -->
+/* ============================================================
+   pages/Auth/Auth.js — Inicio de sesión y registro
+   Vistas: login | reg1 (datos) | reg2 (wallet) | reg3 (listo)
 
-<!-- Marco común: logo + tarjeta + pie -->
-<template id="tpl-auth">
-  <div class="auth">
-    <div class="auth__box">
-      <div class="auth__head">
-        <span class="logo auth__logo">
-          N<svg class="logo__ring" width="25" height="25" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"></circle>
-            <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></line>
-          </svg>LOSS
-        </span>
-        <div class="auth__badge"><span class="badge">Beta cerrada · Polygon testnet</span></div>
-        <p class="auth__tagline" data-slot="tagline"></p>
-      </div>
-      <div class="auth__steps" data-slot="steps"></div>
-      <div class="card auth__card" data-slot="view"></div>
-      <p class="auth__switch" data-slot="switch"></p>
-      <p class="auth__legal">Demo sin fondos reales. N0Loss está en fase de constitución legal y no acepta depósitos.</p>
-    </div>
-  </div>
-</template>
+   Nadie entra sin cuenta: tanto el correo como la wallet se validan
+   contra el backend. La cuenta inteligente de Polygon Amoy se asigna
+   en el servidor durante el registro, nunca en el navegador.
+   ============================================================ */
+import { loadTemplate, tpl, injectCSS, $ } from "../../utils/helpers.js";
+import { shortAddr } from "../../utils/format.js";
+import { loginDemo } from "../../App.js";
+import { PROVIDERS, connectOwner, signChallenge } from "../../services/wallet.js";
+import { api } from "../../services/api.js";
 
-<!-- Vista: inicio de sesión -->
-<template id="tpl-auth-login">
-  <label class="field">
-    <span class="field__label">Correo electrónico</span>
-    <input class="input" type="email" name="email" placeholder="tu@correo.com" autocomplete="email" />
-  </label>
-  <label class="field">
-    <span class="field__label">Contraseña</span>
-    <input class="input" type="password" name="password" placeholder="••••••••" autocomplete="current-password" />
-  </label>
-  <button class="btn btn--primary btn--block" data-action="login">Entrar</button>
-  <div class="auth__divider"><span>O</span></div>
-  <button class="btn btn--ghost btn--block" data-action="connect-login">
-    <span class="auth__providericon auth__providericon--mm" aria-hidden="true"></span>
-    Conectar wallet
-  </button>
-</template>
+let templates = null;
 
-<!-- Registro · paso 1: datos -->
-<template id="tpl-auth-reg1">
-  <label class="field">
-    <span class="field__label">Correo electrónico</span>
-    <input class="input" type="email" name="email" placeholder="tu@correo.com" autocomplete="email" />
-  </label>
-  <label class="field">
-    <span class="field__label">Contraseña</span>
-    <input class="input" type="password" name="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
-  </label>
-  <label class="field">
-    <span class="field__label">País</span>
-    <select class="select" name="country">
-      <option>España</option><option>México</option><option>Argentina</option>
-      <option>Colombia</option><option>Estados Unidos</option><option>Otro</option>
-    </select>
-  </label>
-  <label class="auth__terms">
-    <input type="checkbox" name="terms" />
-    Acepto los Términos de servicio y la Política de privacidad. Entiendo que la beta no acepta depósitos reales.
-  </label>
-  <button class="btn btn--primary btn--block" data-action="reg-next">Continuar</button>
-</template>
+async function getTemplates() {
+  if (templates) return templates;
+  injectCSS("./pages/Auth/Auth.css");
+  const html = await loadTemplate("./pages/Auth/Auth.html");
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const pick = (id) => doc.querySelector(id).innerHTML;
+  templates = {
+    shell: pick("#tpl-auth"),
+    login: pick("#tpl-auth-login"),
+    reg1: pick("#tpl-auth-reg1"),
+    reg2: pick("#tpl-auth-reg2"),
+    reg3: pick("#tpl-auth-reg3"),
+    connecting: pick("#tpl-auth-connecting"),
+  };
+  return templates;
+}
 
-<!-- Registro · paso 2: conectar wallet -->
-<template id="tpl-auth-reg2">
-  <div class="auth__center">
-    <div class="auth__ringbox" aria-hidden="true">
-      <svg width="30" height="30" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"></circle>
-        <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></line>
-      </svg>
-    </div>
-    <h3 class="h2">Conecta tu wallet</h3>
-    <p class="auth__desc">
-      N0Loss es no-custodio: tus fondos viven en tu wallet y en el Vault (ERC-4626),
-      nunca en nuestras cuentas. El gas está patrocinado por el protocolo.
-    </p>
-    <div data-slot="providers"></div>
-    <a class="auth__skip" data-action="reg-skip">Saltar por ahora</a>
-  </div>
-</template>
+function flashError(container, msg) {
+  container.querySelector(".auth__error")?.remove();
+  const el = document.createElement("div");
+  el.className = "auth__error";
+  el.textContent = msg;
+  el.style.cssText =
+    "margin-bottom:12px;padding:10px 12px;border-radius:8px;" +
+    "background:#fdecea;color:#b71c1c;font-size:13px;line-height:1.45;";
+  container.prepend(el);
+}
 
-<!-- Registro · paso 3: cuenta creada -->
-<template id="tpl-auth-reg3">
-  <div class="auth__center">
-    <div class="auth__check" aria-hidden="true">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-        <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </div>
-    <h3 class="auth__done">Cuenta creada</h3>
-    <div class="mono auth__wallet">{{wallet}}</div>
-    <p class="auth__desc">Ya puedes hacer tu primer depósito. Mínimo 10 USDC — 1 ticket por cada 10 USDC.</p>
-    <button class="btn btn--primary btn--block" data-action="reg-finish">Ir a mi panel</button>
-  </div>
-</template>
+const busy = (btn, label) => {
+  const previous = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = label;
+  return () => {
+    btn.disabled = false;
+    btn.textContent = previous;
+  };
+};
 
-<!-- Estado conectando (paso 2) -->
-<template id="tpl-auth-connecting">
-  <div class="auth__center">
-    <div class="spinner auth__spinner"></div>
-    <div class="auth__connlabel">Abriendo {{provider}}…</div>
-    <div class="auth__desc">Aprueba la conexión (eth_requestAccounts).</div>
-  </div>
-</template>
+export default async function Auth(outlet) {
+  const t = await getTemplates();
+  outlet.innerHTML = t.shell;
+
+  const tagline = $("[data-slot='tagline']", outlet);
+  const steps = $("[data-slot='steps']", outlet);
+  const view = $("[data-slot='view']", outlet);
+  const switcher = $("[data-slot='switch']", outlet);
+
+  const form = { email: "", password: "", country: "España", wallet: null };
+
+  const enter = (user) => {
+    loginDemo(user?.email || form.email); // estado local de la app
+    location.hash = "#/home";
+  };
+
+  /* Firma el reto del backend con la wallet inyectada. */
+  const proveWallet = async (providerId) => {
+    const { address, provider } = await connectOwner(providerId);
+    const challenge = await api.nonce(address);
+    if (!challenge.ok) throw new Error(challenge.message);
+    const signature = await signChallenge(provider, address, challenge.message);
+    return { address, signature };
+  };
+
+  /* ---------- Inicio de sesión ---------- */
+  const showLogin = () => {
+    tagline.textContent =
+      "Ahorro con premios semanales. Tu capital se mantiene intacto: solo el rendimiento financia los sorteos de cada viernes.";
+    steps.innerHTML = "";
+    view.innerHTML = t.login;
+    switcher.innerHTML = `¿Aún no tienes cuenta? <a data-action="go-register">Regístrate</a>`;
+
+    $("[data-action='login']", view).onclick = async (e) => {
+      const email = $("[name='email']", view).value.trim();
+      const password = $("[name='password']", view).value;
+      if (!email || !password) {
+        return flashError(view, "Introduce tu correo y tu contraseña.");
+      }
+      const done = busy(e.target.closest("button"), "Entrando…");
+      const res = await api.login(email, password);
+      done();
+      if (!res.ok) return flashError(view, res.message);
+      form.email = email;
+      enter(res.user);
+    };
+
+    $("[data-action='connect-login']", view).onclick = async (e) => {
+      const done = busy(e.target.closest("button"), "Conectando…");
+      try {
+        const { address, signature } = await proveWallet("metamask");
+        const res = await api.loginWithWallet(address, signature);
+        if (!res.ok) throw new Error(res.message);
+        enter(res.user);
+      } catch (err) {
+        done();
+        flashError(view, err.message || "No se pudo conectar la wallet.");
+      }
+    };
+
+    $("[data-action='go-register']", switcher).onclick = () => showReg(1);
+  };
+
+  const paintSteps = (step) => {
+    steps.innerHTML = [1, 2, 3]
+      .map((s) => `<span class="${s <= step ? "is-done" : ""}"></span>`)
+      .join("");
+  };
+
+  /* ---------- Registro ---------- */
+  const showReg = async (step) => {
+    tagline.textContent = "Tres pasos: datos, wallet y listo.";
+    switcher.innerHTML = `¿Ya tienes cuenta? <a data-action="go-login">Inicia sesión</a>`;
+    $("[data-action='go-login']", switcher).onclick = showLogin;
+    paintSteps(step);
+
+    /* ----- Paso 1: datos + comprobación de la lista de la beta ----- */
+    if (step === 1) {
+      view.innerHTML = t.reg1;
+
+      // Recupera lo escrito si el usuario vuelve atrás
+      $("[name='email']", view).value = form.email;
+      $("[name='password']", view).value = form.password;
+
+      $("[data-action='reg-next']", view).onclick = async (e) => {
+        form.email = $("[name='email']", view).value.trim();
+        form.password = $("[name='password']", view).value;
+        form.country = $("[name='country']", view).value;
+
+        if (form.password.length < 8) {
+          return flashError(view, "La contraseña debe tener al menos 8 caracteres.");
+        }
+        if (!$("[name='terms']", view)?.checked) {
+          return flashError(view, "Debes aceptar los términos para continuar.");
+        }
+
+        const done = busy(e.target.closest("button"), "Verificando…");
+        const res = await api.precheck(form.email);
+        done();
+        if (!res.ok) return flashError(view, res.message);
+        showReg(2);
+      };
+    }
+
+    /* ----- Paso 2: la cuenta se crea aquí, con wallet asignada ----- */
+    if (step === 2) {
+      view.innerHTML = t.reg2;
+      const slot = $("[data-slot='providers']", view);
+
+      const finishRegistration = async (payload) => {
+        const res = await api.register({
+          email: form.email,
+          password: form.password,
+          country: form.country,
+          terms: true,
+          ...payload,
+        });
+        if (!res.ok) throw new Error(res.message);
+        form.wallet = res.user.wallet;
+        showReg(3);
+      };
+
+      for (const p of PROVIDERS) {
+        const btn = document.createElement("button");
+        btn.className = "btn btn--ghost btn--block auth__provider";
+        btn.innerHTML =
+          `<span class="auth__providericon auth__providericon--${
+            p.id === "metamask" ? "mm" : "wc"
+          }"></span>${p.label}`;
+        btn.onclick = async () => {
+          view.innerHTML = tpl(t.connecting, { provider: p.label });
+          try {
+            const { address, signature } = await proveWallet(p.id);
+            await finishRegistration({ mode: "external", ownerAddress: address, signature });
+          } catch (err) {
+            await showReg(2);
+            flashError(view, err.message || "No se pudo conectar la wallet.");
+          }
+        };
+        slot.append(btn);
+      }
+
+      // "Saltar por ahora": el backend genera y custodia el firmante.
+      $("[data-action='reg-skip']", view).onclick = async () => {
+        view.innerHTML = tpl(t.connecting, { provider: "tu cuenta N0Loss" });
+        try {
+          await finishRegistration({ mode: "managed" });
+        } catch (err) {
+          await showReg(2);
+          flashError(view, err.message || "No se pudo crear la wallet.");
+        }
+      };
+    }
+
+    /* ----- Paso 3: cuenta creada (ya hay sesión abierta) ----- */
+    if (step === 3) {
+      view.innerHTML = tpl(t.reg3, { wallet: shortAddr(form.wallet) });
+      const walletEl = view.querySelector(".auth__wallet");
+      if (walletEl) walletEl.title = form.wallet; // dirección completa al pasar el ratón
+      $("[data-action='reg-finish']", view).onclick = () => enter();
+    }
+  };
+
+  // Si ya hay sesión válida, no se muestra el formulario.
+  const session = await api.me();
+  if (session.ok) return enter(session.user);
+
+  showLogin();
+}
