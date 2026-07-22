@@ -41,5 +41,18 @@ export const ROUTES = {
 };
 export const DEFAULT_ROUTE = "home";
 
+/* Polygon Amoy / Pimlico */
+export const AMOY_RPC = "https://rpc.ankr.com/polygon_amoy";
+export const PIMLICO_API_KEY = "";
+export const PIMLICO_SPONSORSHIP_POLICY_ID = "";
+
+/* Waitlist / beta linking */
+export const API_BASE_URL = "http://localhost:3001";
+export const WAITLIST_ENDPOINT = `${API_BASE_URL}/waitlist/check`;
+export const WAITLIST_DEMO_EMAILS = ["demo@n0loss.com"];
+export const BETA_LINK_ENDPOINT = `${API_BASE_URL}/waitlist/link`;
+export const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/login`;
+export const REGISTER_ENDPOINT = `${API_BASE_URL}/auth/register`;
+
 /* Wallet demo de la beta */
 export const DEMO_WALLET = "0x8F3aB4d17E90cC24aF61B02dE55E19a8f3D2C21b";
