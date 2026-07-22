@@ -87,3 +87,32 @@ export async function isDeployed(address) {
   const code = await publicClient.getCode({ address: getAddress(address) });
   return !!code && code !== "0x";
 }
+/* ============================================================
+   AÑADIR AL FINAL DE services/wallet.js
+   No sustituye nada de lo que ya tienes: connectSmartAccount y
+   createEmbeddedSmartAccount siguen sirviendo para enviar userOps.
+   Esto solo cubre la parte de identidad (conectar + firmar el reto).
+   ============================================================ */
+
+/**
+ * Conecta la wallet inyectada y devuelve la dirección del firmante (EOA),
+ * asegurando de paso que el usuario está en Polygon Amoy.
+ * No construye la smart account: de eso se encarga el backend.
+ */
+export async function connectOwner(providerId = "metamask") {
+  const provider = await getInjectedProvider(providerId);
+  if (!provider) {
+    throw new Error("No se detectó ninguna wallet. Instala MetaMask o usa WalletConnect.");
+  }
+  const [address] = await provider.request({ method: "eth_requestAccounts" });
+  await ensureAmoy(provider);
+  return { address, provider };
+}
+
+/** Firma el texto de reto que devuelve el backend (personal_sign). */
+export async function signChallenge(provider, address, message) {
+  return provider.request({
+    method: "personal_sign",
+    params: [message, address],
+  });
+}
