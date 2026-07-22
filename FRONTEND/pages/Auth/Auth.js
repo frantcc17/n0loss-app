@@ -4,15 +4,14 @@
    ============================================================ */
 import { loadTemplate, tpl, injectCSS, $ } from "../../utils/helpers.js";
 import { shortAddr } from "../../utils/format.js";
-import { loginDemo } from "../../App.js";
-import {
-  connectSmartAccount,
-  createEmbeddedSmartAccount,
-  PROVIDERS,
-} from "../../services/wallet.js";
-import { isEmailAllowlisted, linkBetaWallet } from "../../services/waitlist.js";
+import { loginWithUser } from "../../App.js";
+import { isEmailAllowlisted, registerUser, loginUser } from "../../services/waitlist.js";
 
 let templates = null;
+
+async function loadWalletService() {
+  return await import("../../services/wallet.js");
+}
 
 async function getTemplates() {
   if (templates) return templates;
@@ -53,8 +52,18 @@ export default async function Auth(outlet) {
 
   const form = { email: "", country: "España", wallet: null, smartAccount: null };
 
-  const enter = () => {
-    loginDemo(form.email);
+  const enter = async () => {
+    const res = await loginUser(form.email);
+    if (!res.ok) {
+      if (form.wallet) {
+        loginWithUser({ email: form.email, wallet: form.wallet });
+        location.hash = "#/home";
+        return;
+      }
+      flashError(view, res.message || "No existe una cuenta registrada con este correo.");
+      return;
+    }
+    loginWithUser(res.user);
     location.hash = "#/home";
   };
 
@@ -65,10 +74,10 @@ export default async function Auth(outlet) {
     form.wallet = sa.address;
     form.smartAccount = sa;
 
-    const link = await linkBetaWallet(form.email, sa.address, sa.ownerAddress);
-    if (!link.ok) {
+    const created = await registerUser(form.email, form.country, sa.address, sa.ownerAddress);
+    if (!created.ok) {
       await showReg(2);
-      flashError(view, link.message || "No se pudo vincular la wallet a la beta.");
+      flashError(view, created.message || "No se pudo crear la cuenta.");
       return false;
     }
     return true;
@@ -82,16 +91,25 @@ export default async function Auth(outlet) {
     view.innerHTML = t.login;
     switcher.innerHTML = `¿Aún no tienes cuenta? <a data-action="go-register">Regístrate</a>`;
 
-    $("[data-action='login']", view).onclick = () => {
-      form.email = $("[name='email']", view).value;
-      // Login = usuario ya registrado. Valida credenciales contra tu backend.
-      enter();
+    $("[data-action='login']", view).onclick = async () => {
+      form.email = $("[name='email']", view).value.trim();
+      if (!form.email) {
+        return flashError(view, "Introduce un correo para entrar.");
+      }
+      const btn = $("[data-action='login']", view);
+      btn.disabled = true;
+      try {
+        await enter();
+      } finally {
+        btn.disabled = false;
+      }
     };
 
     $("[data-action='connect-login']", view).onclick = async (e) => {
       const btn = e.target.closest("button");
       btn.disabled = true;
       try {
+        const { connectSmartAccount } = await loadWalletService();
         const sa = await connectSmartAccount("metamask");
         form.wallet = sa.address;
         form.smartAccount = sa;
@@ -141,6 +159,7 @@ export default async function Auth(outlet) {
         if (!res.ok) {
           return flashError(view, res.message || "Este correo no está en la lista de la beta.");
         }
+
         showReg(2);
       };
     }
@@ -150,6 +169,7 @@ export default async function Auth(outlet) {
       view.innerHTML = t.reg2;
       const slot = $("[data-slot='providers']", view);
 
+      const { PROVIDERS, connectSmartAccount, createEmbeddedSmartAccount } = await loadWalletService();
       for (const p of PROVIDERS) {
         const btn = document.createElement("button");
         btn.className = "btn btn--ghost btn--block auth__provider";
@@ -170,11 +190,22 @@ export default async function Auth(outlet) {
         slot.append(btn);
       }
 
-      $("[data-action='reg-skip']", view).onclick = async () => {
+      $("[data-action='reg-skip']", view).onclick = async (event) => {
+        event.preventDefault();
+
+        if (!form.email) {
+          await showReg(1);
+          return flashError(view, "Introduce tu correo antes de continuar.");
+        }
+
         view.innerHTML = tpl(t.connecting, { provider: "tu cuenta N0Loss" });
         try {
           const ok = await createAndLink(createEmbeddedSmartAccount(form.email));
-          if (ok) showReg(3);
+          if (ok) {
+            loginWithUser({ email: form.email, wallet: form.wallet });
+            location.hash = "#/home";
+            window.dispatchEvent(new Event("hashchange"));
+          }
         } catch (err) {
           await showReg(2);
           flashError(view, err.message || "No se pudo crear la wallet.");
