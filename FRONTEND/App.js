@@ -26,6 +26,19 @@ export function loginDemo(email) {
     cyclesTotal: 0,
   });
 }
+
+export function loginWithUser(user) {
+  store.set({
+    user: {
+      email: user?.email || "demo@n0loss.com",
+      wallet: user?.wallet || DEMO_WALLET,
+    },
+    balance: 0,
+    available: 10000,
+    cyclesConsecutive: 0,
+    cyclesTotal: 0,
+  });
+}
 export function logout() {
   store.set({
     user: null, balance: 0, available: 0, cyclesConsecutive: 0, cyclesTotal: 0,
